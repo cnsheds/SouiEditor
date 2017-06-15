@@ -11,6 +11,7 @@
 #include "adapter.h"
 #define  MARGIN 20
 
+extern BOOL g_bHookCreateWnd;	//ÊÇ·ñÀ¹½Ø´°¿ÚµÄ½¨Á¢
 
 BOOL SDesignerView::NewLayout(SStringT strResName, SStringT strPath)
 {
@@ -33,6 +34,7 @@ BOOL SDesignerView::NewLayout(SStringT strResName, SStringT strPath)
 
 SDesignerView::SDesignerView(SHostDialog *pMainHost, SWindow *pContainer, STreeCtrl *pTreeXmlStruct)
 {
+	m_nSciCaretPos = 0;
 	m_nState = 0;
 	m_pMoveWndRoot = NULL;
 	m_pRealWndRoot = NULL;
@@ -41,7 +43,6 @@ SDesignerView::SDesignerView(SHostDialog *pMainHost, SWindow *pContainer, STreeC
 	m_treeXmlStruct = pTreeXmlStruct;
 	m_ndata = 0;
 	g_nUIElmIndex = 0;
-	m_pContainer->SetCreateChildFun((FN_CREATEWND)(&SUIWindow::CreateChild));
 	m_treeXmlStruct->GetEventSet()->subscribeEvent(EVT_TC_SELCHANGED, Subscriber(&SDesignerView::OnTCSelChanged, this));
 
 	pugi::xml_document doc;
@@ -106,14 +107,12 @@ BOOL SDesignerView::OpenProject(SStringT strFileName)
 
 BOOL SDesignerView::CloseProject()
 {
+	m_strCurLayoutXmlFile.Empty();
+	m_strCurFileEditor.Empty();
 	m_strProPath = m_strUIResFile = L"";
 	m_xmlDocUiRes.reset();
 	UseEditorUIDef(false);
 
-	if (m_pScintillaWnd)
-	{
-		m_pScintillaWnd->BindDesignView(nullptr);
-	}
 
 	// Çå¿ÕË½ÓÐÑùÊ½³Ø
 	if (m_privateStylePool->GetCount())
@@ -136,6 +135,9 @@ BOOL SDesignerView::CloseProject()
 	m_pMoveWndRoot = nullptr;
 	m_nState = 0;
 	m_ndata = 0;
+	m_nSciCaretPos = 0;
+
+	ShowNoteInSciwnd();
 
 	return TRUE;
 }
@@ -157,10 +159,10 @@ BOOL SDesignerView::InsertLayoutToMap(SStringT strFileName)
 
 	m_mapInclude1[strFileName] = new SMap<int, SStringT>;
 
-	m_strCurFile = strFileName;
+	m_strCurLayoutXmlFile = strFileName;
 	//RenameChildeWnd(xmlDoc1->first_child());
 	RenameChildeWnd(xmlDoc1->root());
-	m_strCurFile.Empty();
+	m_strCurLayoutXmlFile.Empty();
 	return TRUE;
 }
 
@@ -179,8 +181,10 @@ BOOL SDesignerView::LoadLayout(SStringT strFileName)
 	pugi::xml_node xmlnode;
 
 	BOOL bIsInclude = FALSE;
+	if (m_strCurLayoutXmlFile != strFileName)
+		m_nSciCaretPos = 0;
 
-	m_strCurFile = strFileName;
+	m_strCurLayoutXmlFile = strFileName;
 
 	SMap<SStringT, pugi::xml_node>::CPair *p = m_mapLayoutFile.Lookup(strFileName);
 	xmlroot = p->m_value;
@@ -341,6 +345,8 @@ BOOL SDesignerView::LoadLayout(SStringT strFileName)
 	//wchar_t *s = L"<window pos=\"20,20,@500,@500\" colorBkgnd=\"#d0d0d0\"></window>";
 	const wchar_t *s3 = L"<movewnd pos=\"20,20,@800,@500\" ></movewnd>";
 
+	g_bHookCreateWnd = TRUE;
+
 	////´´½¨²¼¾Ö´°¿ÚµÄ¸ù´°¿Ú
 	m_pRealWndRoot = (SDesignerRoot*)m_pContainer->CreateChildren(s2);
 	m_pRealWndRoot->SetRootFont(m_defFont);
@@ -355,10 +361,12 @@ BOOL SDesignerView::LoadLayout(SStringT strFileName)
 
 	if (!m_pRealWndRoot->CreateChildren(xmlnode))
 	{
+		g_bHookCreateWnd = FALSE;
 		return FALSE;
 	}
 
 	CreateAllChildWnd(m_pRealWndRoot, m_pMoveWndRoot);
+	g_bHookCreateWnd = FALSE;
 
 	m_nState = 0;
 	GetMoveWndRoot()->Click(0, CPoint(0, 0));
@@ -481,12 +489,12 @@ BOOL SDesignerView::SaveAll()
 //±£´æµ±Ç°´ò¿ªµÄ²¼¾ÖÎÄ¼þ
 bool SDesignerView::SaveLayoutFile()
 {
-	if (m_strCurFile.IsEmpty())
+	if (m_strCurLayoutXmlFile.IsEmpty())
 	{
 		return false;
 	}
 	bool bRet = false;
-	SStringT strFile = m_strCurFile;
+	SStringT strFile = m_strCurLayoutXmlFile;
 	SStringT strFileName;
 	SStringT FullFileName;
 
@@ -622,7 +630,7 @@ void SDesignerView::RemoveWndName(pugi::xml_node xmlNode, BOOL bClear, SStringT 
 
 		if (strFileName.IsEmpty())
 		{
-			strFileName = m_strCurFile;
+			strFileName = m_strCurLayoutXmlFile;
 		}
 
 		SMap<SStringT, SMap<int, SStringT>* >::CPair *p = m_mapInclude1.Lookup(strFileName);
@@ -708,7 +716,7 @@ void SDesignerView::RenameChildeWnd(pugi::xml_node xmlNode)
 
 			RenameWnd(NodeChild);
 
-			SMap<SStringT, SMap<int, SStringT>* >::CPair *p = m_mapInclude1.Lookup(m_strCurFile);
+			SMap<SStringT, SMap<int, SStringT>* >::CPair *p = m_mapInclude1.Lookup(m_strCurLayoutXmlFile);
 			if (p)
 			{
 				SMap<int, SStringT>* pMap = p->m_value;
@@ -1062,9 +1070,23 @@ void SDesignerView::BindXmlcodeWnd(SWindow *pXmlTextCtrl)
 	m_pScintillaWnd = (CScintillaWnd*)pXmlTextCtrl->GetUserData();
 	if (m_pScintillaWnd)
 	{
-		m_pScintillaWnd->BindDesignView(this);
+		m_pScintillaWnd->SetSaveCallback((SCIWND_FN_CALLBACK)&CMainDlg::OnScintillaSave);
+
+		ShowNoteInSciwnd();
 	}
 }
+
+void SDesignerView::ShowNoteInSciwnd()
+{
+	SStringW strDebug = L"\r\n\r\n\r\n\t\t\tÐÞ¸Ä´úÂëºó°´Ctrl+S¿ÉÔÚ´°Ìå¿´µ½±ä»¯";
+
+	SStringA str = S_CW2A(strDebug, CP_UTF8);
+	m_pScintillaWnd->SendMessage(SCI_ADDTEXT, str.GetLength(),
+		reinterpret_cast<LPARAM>((LPCSTR)str));
+	m_pScintillaWnd->SetDirty(false);
+	m_pScintillaWnd->SendMessage(SCI_SETREADONLY, 1, 0);
+}
+
 
 void SDesignerView::InitProperty(SWindow *pPropertyContainer)   //³õÊ¼»¯ÊôÐÔÁÐ±í
 {
@@ -1734,6 +1756,7 @@ BOOL SDesignerView::ReLoadLayout(BOOL bClearSel)
 	//wchar_t *s = L"<window pos=\"20,20,@500,@500\" colorBkgnd=\"#d0d0d0\"></window>";
 	const wchar_t *s3 = L"<movewnd pos=\"20,20,@500,@500\" ></movewnd>";
 
+	g_bHookCreateWnd = TRUE;
 	////´´½¨²¼¾Ö´°¿ÚµÄ¸ù´°¿Ú
 	m_pRealWndRoot = (SDesignerRoot*)m_pContainer->CreateChildren(s2);
 	m_pRealWndRoot->SetRootFont(m_defFont);
@@ -1748,10 +1771,12 @@ BOOL SDesignerView::ReLoadLayout(BOOL bClearSel)
 
 	if (!m_pRealWndRoot->CreateChildren(xmlnode))
 	{
+		g_bHookCreateWnd = FALSE;
 		return FALSE;
 	}
 
 	CreateAllChildWnd(m_pRealWndRoot, m_pMoveWndRoot);
+	g_bHookCreateWnd = FALSE;
 
 	m_treeXmlStruct->RemoveAllItems();
 	InitXMLStruct(m_CurrentLayoutNode, STVI_ROOT);
@@ -1778,6 +1803,15 @@ BOOL SDesignerView::bIsContainerCtrl(SStringT strCtrlName) //ÅÐ¶Ï¿Ø¼þÊÇ·ñÊÇÈÝÆ÷¿
 	return FALSE;
 }
 
+void SDesignerView::SaveEditorCaretPos()
+{
+	m_nSciCaretPos = m_pScintillaWnd->SendMessage(SCI_GETCURRENTPOS);
+}
+
+void SDesignerView::RestoreEditorCaretPos()
+{
+	m_pScintillaWnd->SendMessage(SCI_GOTOPOS, m_nSciCaretPos);
+}
 
 void SDesignerView::AddCodeToEditor(CScintillaWnd* _pSciWnd)  //¸´ÖÆxml´úÂëµ½´úÂë±à¼­Æ÷
 {
@@ -1785,8 +1819,9 @@ void SDesignerView::AddCodeToEditor(CScintillaWnd* _pSciWnd)  //¸´ÖÆxml´úÂëµ½´úÂ
 	if (_pSciWnd)
 		pSciWnd = _pSciWnd;
 
-	m_strCurFileEditor = m_strCurFile;
+	m_strCurFileEditor = m_strCurLayoutXmlFile;
 
+	pSciWnd->SendMessage(SCI_SETREADONLY, 0, 0);
 	pSciWnd->SendMessage(SCI_CLEARALL, 0, 0);
 
 	SStringA str;
@@ -1821,6 +1856,8 @@ void SDesignerView::AddCodeToEditor(CScintillaWnd* _pSciWnd)  //¸´ÖÆxml´úÂëµ½´úÂ
 	pSciWnd->SendMessage(SCI_ADDTEXT, str.GetLength(),
 		reinterpret_cast<LPARAM>((LPCSTR)str));
 	pSciWnd->SetDirty(false);
+	pSciWnd->SetFocus();
+	RestoreEditorCaretPos();
 
 	delete strDebug;
 }
@@ -1828,12 +1865,12 @@ void SDesignerView::AddCodeToEditor(CScintillaWnd* _pSciWnd)  //¸´ÖÆxml´úÂëµ½´úÂ
 // °Ñ´úÂë±à¼­Æ÷ÐÞ¸ÄµÄ½á¹ûÖØÐÂ¼ÓÔØ, ¸üÐÂ²¼¾Ö´°¿Ú
 void SDesignerView::GetCodeFromEditor(CScintillaWnd* _pSciWnd)//´Ó´úÂë±à¼­Æ÷»ñÈ¡xml´úÂë
 {
-	if (m_strCurFile.IsEmpty())
+	if (m_strCurLayoutXmlFile.IsEmpty())
 	{
 		return;
 	}
 
-	if (m_strCurFileEditor.CompareNoCase(m_strCurFile) != 0)
+	if (m_strCurFileEditor.CompareNoCase(m_strCurLayoutXmlFile) != 0)
 	{
 		return;
 	}
@@ -1863,6 +1900,8 @@ void SDesignerView::GetCodeFromEditor(CScintillaWnd* _pSciWnd)//´Ó´úÂë±à¼­Æ÷»ñÈ¡
 		return;
 	}
 
+	SaveEditorCaretPos();
+
 	RenameChildeWnd(doc.root());
 	TrimXmlNodeTextBlank(doc.document_element());
 
@@ -1879,14 +1918,15 @@ void SDesignerView::GetCodeFromEditor(CScintillaWnd* _pSciWnd)//´Ó´úÂë±à¼­Æ÷»ñÈ¡
 		xmlPNode.remove_child(m_xmlNode);
 		m_xmlNode = xmlNode;
 
+		SStringT aa = Debug1(m_xmlNode);
 		m_CurrentLayoutNode = m_xmlNode;
 	}
 	else
 		if (m_xmlNode == m_CurrentLayoutNode && strNodeName.CompareNoCase(m_xmlNode.name()) != 0)
 		{
-			pugi::xml_node fristNode = m_xmlNode.child(_T("root"));
-			pugi::xml_node xmlNode = m_xmlNode.insert_copy_after(doc.root().first_child(), fristNode);
-			m_xmlNode.remove_child(fristNode);
+ 			pugi::xml_node fristNode = m_xmlNode.child(_T("root"));
+ 			pugi::xml_node xmlNode = m_xmlNode.insert_copy_after(doc.root().first_child(), fristNode);
+ 			m_xmlNode.remove_child(fristNode);
 			bRoot = TRUE;
 		}
 		else
@@ -1903,7 +1943,7 @@ void SDesignerView::GetCodeFromEditor(CScintillaWnd* _pSciWnd)//´Ó´úÂë±à¼­Æ÷»ñÈ¡
 	// 	ReLoadLayout(FALSE);
 	// 	m_pMoveWndRoot->Click(0, CPoint(0, 0));
 
-		// ÏÈ¼ÇÏÂÔ­À´Ñ¡µÄ¿Ø¼þÊÇµÚ¼¸¸öË³ÐòµÄ¿Ø¼þ, ÔÙ½øÐÐÖØ²¼¾Ö
+	// ÏÈ¼ÇÏÂÔ­À´Ñ¡µÄ¿Ø¼þÊÇµÚ¼¸¸öË³ÐòµÄ¿Ø¼þ, ÔÙ½øÐÐÖØ²¼¾Ö
 	int data = ((SMoveWnd*)m_CurSelCtrl)->GetUserData();
 	ReLoadLayout();
 
@@ -1918,6 +1958,7 @@ void SDesignerView::GetCodeFromEditor(CScintillaWnd* _pSciWnd)//´Ó´úÂë±à¼­Æ÷»ñÈ¡
 		if (pMoveWnd)
 		{
 			m_CurSelCtrl = pMoveWnd;
+			AddCodeToEditor(NULL);
 		}
 		else
 		{
@@ -1968,7 +2009,7 @@ void SDesignerView::NewWnd(CPoint pt, SMoveWnd *pM)
 
 		RenameWnd(m_xmlNode, TRUE);
 
-		SMap<SStringT, SMap<int, SStringT>* >::CPair *p = m_mapInclude1.Lookup(m_strCurFile);
+		SMap<SStringT, SMap<int, SStringT>* >::CPair *p = m_mapInclude1.Lookup(m_strCurLayoutXmlFile);
 		if (p)
 		{
 			SMap<int, SStringT>* pMap = p->m_value;

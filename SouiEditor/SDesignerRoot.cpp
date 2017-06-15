@@ -8,7 +8,7 @@ namespace SOUI{
 
 	SUIWindow::SUIWindow(void)
 	{
-		SetCreateChildFun((FN_CREATEWND)(&SUIWindow::CreateChild));
+		
 	}
 
 	SWindow * SUIWindow::CreateChild(LPCWSTR classname)
@@ -22,10 +22,7 @@ namespace SOUI{
 		{
 			pChild = SApplication::getSingleton().CreateWindowByName(_T("ui_window"));
 		}
-		else
-		{
-			pChild->SetCreateChildFun((FN_CREATEWND)(&SUIWindow::CreateChild));
-		}
+		
 		if (pChild)
 		{
 			pChild->SetUserData((ULONG_PTR)(GetUIElmIndex()));

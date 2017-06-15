@@ -16,10 +16,8 @@ protected:
 	HINSTANCE m_hModule;
 };
 
-typedef void (*FN_CALLBACK)(int custom_msg);
-namespace SOUI {
-	class SDesignerView;
-}
+class CScintillaWnd;
+typedef void (CSimpleWnd::*SCIWND_FN_CALLBACK)(CScintillaWnd*, int, SStringT);
 
 // CScintillaWnd
 class CScintillaWnd : public CSimpleWnd
@@ -35,16 +33,17 @@ public:
 
 	BOOL SaveFile(LPCTSTR lpFileName);
 
-	void BindDesignView(SDesignerView* pWnd);
-
 	LPCTSTR GetOpenedFileName(){return m_strFileName;}
 	void SetOpenedFileName(LPCTSTR pszFileName){m_strFileName=pszFileName;}
 
 	LRESULT SendEditor(UINT Msg, WPARAM wParam=0, LPARAM lParam=0) {
 		return SendMessage(Msg, wParam, lParam);
 	}
+	void SetSaveCallback(SCIWND_FN_CALLBACK fun)
+	{
+		m_fnCallback = fun;
+	}
 
-	void SetOnDirtyWnd(SWindow* pWnd, int index);
 	bool m_bDirty;		//指示文档是否已修改
 
 protected:
@@ -71,9 +70,5 @@ protected:
 	END_MSG_MAP()
 
 	SStringT m_strFileName;
-	SDesignerView *m_pDesign;
-	FN_CALLBACK m_fnCallback;
-
-	SWindow* m_pDirtyWnd;
-	int m_nPageIndex;
+	SCIWND_FN_CALLBACK m_fnCallback;
 };

@@ -40,7 +40,7 @@ static const int MARGIN_SCRIPT_FOLD_INDEX = 1;
 
 CScintillaWnd::CScintillaWnd()
 {
-	m_pDirtyWnd = nullptr;
+	m_fnCallback = NULL;
 }
 
 CScintillaWnd::~CScintillaWnd()
@@ -49,19 +49,12 @@ CScintillaWnd::~CScintillaWnd()
 
 BOOL CScintillaWnd::Create(LPCTSTR lpszWindowName, DWORD dwStyle, const RECT& rect, HWND hParent, UINT nID, HINSTANCE hInst)
 {
-	m_pDesign = nullptr;
 	SetDirty(false);
 	HWND hWnd = CreateWindowEx(WS_EX_CLIENTEDGE, STR_SCINTILLAWND, lpszWindowName, dwStyle, rect.left, rect.top, rect.right - rect.left, rect.bottom - rect.top, hParent, (HMENU)nID, hInst, NULL);
 	if (!hWnd) return FALSE;
 	SubclassWindow(hWnd);
 	InitScintillaWnd();
 	return TRUE;
-}
-
-void CScintillaWnd::SetOnDirtyWnd(SWindow * pWnd, int index)
-{
-	m_pDirtyWnd = pWnd;
-	m_nPageIndex = index;
 }
 
 // 显示行号
@@ -158,7 +151,12 @@ BOOL CScintillaWnd::OpenFile(LPCTSTR lpFileName)
 
 void CScintillaWnd::DoSave()
 {
-	if (!m_strFileName.IsEmpty() && SaveFile(m_strFileName))
+	if (m_strFileName.IsEmpty())
+	{
+		return;
+	}
+
+	if (SaveFile(m_strFileName))
 		SetDirty(false);
 }
 
@@ -177,27 +175,9 @@ void CScintillaWnd::SetDirty(bool bDirty)
 		SetXmlLexer(white);
 	}
 
-	const LPCWSTR strModify = L" ***";
-	if (m_pDirtyWnd)
+	if (m_fnCallback && !m_strFileName.IsEmpty())
 	{
-		if (m_pDirtyWnd->IsClass(L"page"))
-		{
-			STabPage* pPage = (STabPage*)m_pDirtyWnd;
-			STabCtrl* pTab = (STabCtrl*)pPage->GetParent();
-			SStringT oldTitle = pPage->GetTitle();
-			if (bDirty)
-			{
-				if (oldTitle.Find(strModify) == -1)
-				{
-					pTab->SetItemTitle(m_nPageIndex, oldTitle + strModify);
-				}
-			}
-			else
-			{
-				oldTitle.Replace(strModify, _T(""));
-				pTab->SetItemTitle(m_nPageIndex, oldTitle);
-			}
-		}
+		(this->*m_fnCallback)(this, 1, bDirty ? _T("dirty") : _T(""));
 	}
 }
 
@@ -231,10 +211,6 @@ BOOL CScintillaWnd::SaveFile(LPCTSTR lpFileName)
 	return TRUE;
 }
 
-void CScintillaWnd::BindDesignView(SDesignerView* pWnd)
-{
-	m_pDesign = pWnd;
-}
 
 void CScintillaWnd::InitScintillaWnd(void)
 {
@@ -450,11 +426,15 @@ LRESULT CScintillaWnd::OnNotify(int idCtrl, LPNMHDR pnmh)
 		if (pp)	//判断是否是文字改变
 			SetDirty(true);
 	}
-		break;
+	break;
 
 	case SCN_CHARADDED:
-		SetDirty(true);
-		break;
+	{
+		const char *pp = pSCNotification->text;
+		if (pp)	//判断是否是文字改变
+			SetDirty(true);
+	}
+	break;
 
 	case SCN_UPDATEUI:
 	{
@@ -488,17 +468,9 @@ void CScintillaWnd::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
 	{
 		if (m_bDirty)
 		{
-			if (m_strFileName.IsEmpty())
+			if (m_fnCallback)
 			{
-				if (m_pDesign)
-				{
-					m_pDesign->GetCodeFromEditor(nullptr);
-					SetDirty(false);
-				}
-			}
-			else
-			{
-				DoSave();
+				(this->*m_fnCallback)(this, 0, m_strFileName);
 			}
 		}
 	}
