@@ -167,6 +167,9 @@
     <ClCompile Include="ResManger.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="SysdataMgr.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="SouiEditor.rc">
@@ -343,6 +346,15 @@
       <Filter>ExtendCtrl</Filter>
     </ClInclude>
     <ClInclude Include="ResManger.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="SysdataMgr.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Global.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CmdLine.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -4,7 +4,7 @@
 		<window pos="1,[1,-1,-1" colorBkgnd="@color/bkBlack1">
 			<caption pos="0,0,-0,40" show="1" font="adding:0" colorBkgnd="#FFFFFF20">
 				<icon name="" src="ICON_LOGO:32" pos="8,|0" offset="0,-0.5" />
-				<text pos="[8,|0" offset="0, -0.5" class="cls_title">SOUI界面编辑器</text>
+				<text name="apptitle" pos="[8,|0" offset="0, -0.5" class="cls_title">@string/title</text>
 				<imgbtn name="btn_close" skin="_skin.sys.btn.close" pos="-45,0" tip="close" animate="1" />
 				<imgbtn name="btn_max" skin="_skin.sys.btn.maximize" pos="-83,0" animate="1" />
 				<imgbtn name="btn_restore" skin="_skin.sys.btn.restore" pos="-83,0" show="0" animate="1" />

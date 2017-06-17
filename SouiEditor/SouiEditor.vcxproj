@@ -228,6 +228,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="SysdataMgr.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="SouiEditor.rc" />
@@ -250,6 +251,7 @@
     <ClInclude Include="..\..\..\OpenSource\soui\controls.extend\SVscrollbar.h" />
     <ClInclude Include="Adapter.h" />
     <ClInclude Include="CDebug.h" />
+    <ClInclude Include="CmdLine.h" />
     <ClInclude Include="colorpicker\ColourPopup.h" />
     <ClInclude Include="colorpicker\SColorPicker.h" />
     <ClInclude Include="colorpicker\Tooltipctrl.h" />
@@ -263,6 +265,7 @@
     <ClInclude Include="Dialog\DlgSkinSelect.h" />
     <ClInclude Include="Dialog\DlgStyleManage.h" />
     <ClInclude Include="FileHelper.h" />
+    <ClInclude Include="Global.h" />
     <ClInclude Include="helpapi.h" />
     <ClInclude Include="MainDlg.h" />
     <ClInclude Include="propgrid\propitem\SPropertyItem-Color.h" />
@@ -289,6 +292,7 @@
     <ClInclude Include="SRotateWindow.h" />
     <ClInclude Include="SSwitch.h" />
     <ClInclude Include="stdafx.h" />
+    <ClInclude Include="SysdataMgr.h" />
     <ClInclude Include="xpm_icons.h" />
   </ItemGroup>
   <ItemGroup>
