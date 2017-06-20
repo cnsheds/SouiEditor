@@ -10,10 +10,12 @@
 #include "DesignerView.h"
 #include "xpm_icons.h"
 #include "SysdataMgr.h"
+#include "MainDlg.h"
 
 #define STR_SCINTILLAWND _T("Scintilla")
 #define STR_SCINTILLADLL _T("SciLexer.dll")
 
+extern CMainDlg* g_pMainDlg;
 //////////////////////////////////////////////////////////////////////////
 CScintillaModule::CScintillaModule()
 {
@@ -444,9 +446,9 @@ SStringT CScintillaWnd::GetHtmlTagname()
 	return tagname;
 }
 
-SStringA CScintillaWnd::GetNotePart()
+SStringA CScintillaWnd::GetNotePart(int curPos)
 {
-	int curPos = int(SendEditor(SCI_GETCURRENTPOS));
+	// int(SendEditor(SCI_GETCURRENTPOS))
 	int startPos = SendEditor(SCI_WORDSTARTPOSITION, curPos, true);
 	SStringA tagname;
 	if (curPos == startPos)
@@ -488,7 +490,32 @@ void CScintillaWnd::ShowAutoComplete(const char ch)
 	long lStart = SendEditor(SCI_GETCURRENTPOS, 0, 0);
 	int startPos = SendEditor(SCI_WORDSTARTPOSITION, lStart, true);
 
-	if (ch == '<')
+	if (ch == '.')
+	{
+		SStringA str = g_pMainDlg->m_UIResFileMgr.GetSkinAutos();
+		if (!str.IsEmpty())
+		{
+			SendEditor(SCI_AUTOCSHOW, lStart - startPos, (LPARAM)(LPCSTR)str);
+		}
+	}
+	else if (ch == '/')
+	{
+		//int startPos = SendEditor(SCI_WORDSTARTPOSITION, lStart-1, true);
+		SStringA clsName = GetNotePart(lStart - 1);
+		SStringA str;
+		if (clsName.IsEmpty())
+			str = g_pMainDlg->m_UIResFileMgr.GetStyleAutos();
+		else if (clsName.CompareNoCase("color") == 0)
+			str = g_pMainDlg->m_UIResFileMgr.GetColorAutos();
+		else if (clsName.CompareNoCase("string") == 0)
+			str = g_pMainDlg->m_UIResFileMgr.GetStringAutos();
+
+		if (!str.IsEmpty())
+		{
+			SendEditor(SCI_AUTOCSHOW, lStart - startPos, (LPARAM)(LPCSTR)str);
+		}
+	}
+	else if (ch == '<')
 	{
 		SStringA str = g_SysDataMgr.GetCtrlAutos();
 		if (!str.IsEmpty())

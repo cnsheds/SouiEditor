@@ -59,7 +59,7 @@ protected:
 	bool doMatch(); //匹配括号并加亮缩进向导;
 
 	SStringT GetHtmlTagname();
-	SStringA GetNotePart();
+	SStringA GetNotePart(int curPos);
 
 	void ShowAutoComplete(const char ch);
 	

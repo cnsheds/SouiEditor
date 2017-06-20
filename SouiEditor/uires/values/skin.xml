@@ -12,4 +12,6 @@
 	<imglist name="skin_blue_button" src="img:png_btn_blue" states="3" />
 	<imglist name="skin_app_button2" src="img:png_app_button" states="3" />
 	<imglist name="skin_tree_toggle_png" src="IMG:tree_toggle_png" states="6" />
+	<imglist name="skin_menu_skin_png" src="IMG:menu_skin_png" states="2" />
+	<imglist name="skin_menu_sep_png" src="IMG:menu_sep_png" states="1" />
 </skin>

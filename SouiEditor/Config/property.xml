@@ -59,6 +59,11 @@
 		目前只实现了skin，font 用于选择皮肤、字体
    -->
 
+	<!-- 文本中可使用的特殊字符
+	空格 (&#x0020;) 
+	Tab  (&#x0009;) 
+	回车 (&#x000D;) 
+	换行 (&#x000A;) -->
 
 	<通用样式>
 		<id style="proptext" name ="窗口ID(id)" description="窗口的ID"/>
@@ -97,13 +102,19 @@
 
 		<drawFocusRect style="propoption" name ="焦点虚框" options="是:1|否:0" description="drawFocusRect:绘制默认的焦点虚框"/>	
 
-		<pos style="proptext" name ="位置(pos)" />
+		<pos style="proptext" name ="位置(pos)" description="“|”代表参考父窗口的中心
+			&#x000A;“%”代表在父窗口的百分比，可以是小数，负数
+			&#x000A;“[”相对于前一兄弟窗口的右值(right,bottom)
+			&#x000A;“]”相对于后一兄弟窗口的左值(left,top)
+			&#x000A;“{”相对于前一兄弟窗口的左值(left,top)
+			&#x000A;“}”相对于后一兄弟窗口的右值(right,bottom)			&#x000A;“@”标志用来指定窗口的大小，只能出现在pos属性的第3，4个值中，用来标识窗口的宽度。当后面的值为负时，代表自动计算窗口的宽度或者高度" />
 
-		<size style="proptext" name ="尺寸(size)"  />  		
+		<size style="proptext" name ="尺寸(size)" description="-1   窗口自适应内容大小
+			&#x000A;-2   使用父窗口的宽/高" />  		
 
 		<offset style="proptext" name ="偏移(offset)"  /> 	
 
-		<pos2type style="proptext" name ="pos2type"  />  
+		<pos2type style="proptext" name ="pos2type" description="为了兼容旧版, 推荐使用offset" />  
 
 		<alpha style="proptext" name ="透明度(alpha)" description="数值在0-255之间"/>  	
 
@@ -112,24 +123,17 @@
 		<colorText style="propcolor" name="文本颜色(colorText)" />
 
 		<font style="proptext" name="字体(font)" ButtonType="font" description="face:字体名称(微软雅黑);
-		&#x000A;bold:加粗(1);
-		&#x000A;size:字体绝对大小(13);
-		&#x000A;underline:下划线(1);
-		&#x000A;italic:倾斜(1_;
-		&#x000A;strike:删除线(1);
-		&#x000A;charset:字符集(134 GB2312_CHARSET );
-		&#x000A;adding:字体相对于默认字体的大小(5)"/>	
+			&#x000A;bold:加粗(1);
+			&#x000A;size:字体绝对大小(13);
+			&#x000A;underline:下划线(1);
+			&#x000A;italic:倾斜(1_;
+			&#x000A;strike:删除线(1);
+			&#x000A;charset:字符集(134 GB2312_CHARSET );
+			&#x000A;adding:字体相对于默认字体的大小(5)"/>	
 
 		<fontHover style="proptext" name="字体(fontHover)" ButtonType="font"/>	
 		<fontPush style="proptext" name="字体(fontPush)" ButtonType="font"/>	
 		<fontDisable style="proptext" name="字体(fontDisable)" ButtonType="font"/>		
-
-
-		<!-- 空格 (& #x0020;) 
-Tab (& #x0009;) 
-回车 (& #x000D;) 
-换行 (& #x000A;) -->
-
 
 		<colorBorder style="propcolor" name ="边框颜色(colorBorder)"/>
 		<colorUp style="propcolor" name ="按起颜色(colorUp)" />
@@ -138,8 +142,6 @@ Tab (& #x0009;)
 		<colorDownHover style="propcolor" name ="colorDownHover" />
 		<colorUpPush style="propcolor" name ="colorUpPush" />
 		<colorDownPush style="propcolor" name ="colorDownPush"/>	
-
-
 
 		<cursor style="propoption" name ="光标(cursor)" options="arrow|ibeam|wait|cross|uparrow|size|sizenwse|sizenesw|sizewe|sizens|sizeall|no|hand|help" description="鼠标形状"/>			
 		<colorTextHover style="propcolor" name ="文本颜色Hover(colorTextHover)" />		
@@ -153,25 +155,20 @@ Tab (& #x0009;)
 
 		<layout_gravity style="propoption" name ="layout_gravity" options="左:left|上:top|中:center|右:right|下:bottom" description="相对于父控件的对齐方式"/>	
 
-
-
 		<extend style="proptext" name ="外边距" description='extend = "0,0,0,0"
 		&#x000A;四个点分别表示左上右下的间距，与margin类似;' />	
 
 		<weight style="proptext" name ="weight" description="" />	
-		<width style="proptext" name ="宽度(width)" />	
-		<height style="proptext" name ="高度(height)" />
-
-
+		<width style="proptext" name ="宽度(width)" description="-1   窗口自适应内容大小
+			&#x000A;-2   使用父窗口的宽/高" />	
+		<height style="proptext" name ="高度(height)" description="-1   窗口自适应内容大小
+			&#x000A;-2   使用父窗口的宽/高" />
 
 		<!-- 编辑器特殊属性，用于设置button edit window等内容
-	  如 <button>我是按钮</button> 
-      如果有这个属性，就可以设置 "我是按钮"这里的值
-	-->
+		如 <button>我是按钮</button> 
+		如果有这个属性，就可以设置 "我是按钮"这里的值
+		-->
 		<UiEdit_windowText style="proptext" name="窗口文本" />	
-
-
-
 	</通用样式>
 
 
