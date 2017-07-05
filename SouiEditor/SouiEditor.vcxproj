@@ -98,7 +98,7 @@
       <WarningLevel>Level3</WarningLevel>
       <AdditionalIncludeDirectories>.;$(SOUIPATH)\config;$(SOUIPATH)\components;$(SOUIPATH)\SOUI\include;$(SOUIPATH)\utilities\include;$(SOUIPATH)\controls.extend;..\Scintilla\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_WINDOWS;STRICT;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <BrowseInformation>true</BrowseInformation>
       <Optimization>Disabled</Optimization>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
@@ -126,7 +126,7 @@
       <WarningLevel>Level3</WarningLevel>
       <AdditionalIncludeDirectories>.;$(SOUIPATH)\config;$(SOUIPATH)\components;$(SOUIPATH)\SOUI\include;$(SOUIPATH)\utilities\include;$(SOUIPATH)\controls.extend;..\Scintilla\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <WholeProgramOptimization>true</WholeProgramOptimization>
     </ClCompile>
     <Link>
@@ -213,6 +213,7 @@
     <ClCompile Include="propgrid\propitem\SPropertyItem-Text.cpp" />
     <ClCompile Include="propgrid\SPropertyGrid.cpp" />
     <ClCompile Include="propgrid\SPropertyItemBase.cpp" />
+    <ClCompile Include="pugixml_write.cpp" />
     <ClCompile Include="ResManger.cpp" />
     <ClCompile Include="ScintillaWnd.cpp" />
     <ClCompile Include="SDesignerRoot.cpp" />
@@ -278,6 +279,7 @@
     <ClInclude Include="propgrid\SPropertyGrid.h" />
     <ClInclude Include="propgrid\SPropertyItem-i.h" />
     <ClInclude Include="propgrid\SPropertyItemBase.h" />
+    <ClInclude Include="pugixml_write.h" />
     <ClInclude Include="ResManger.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="ScintillaWnd.h" />

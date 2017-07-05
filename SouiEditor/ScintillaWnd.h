@@ -43,6 +43,7 @@ public:
 	{
 		m_fnCallback = fun;
 	}
+	void GotoFoundLine();
 
 	bool m_bDirty;		//指示文档是否已修改
 
@@ -66,6 +67,9 @@ protected:
 	void GetRange(int start, int end, char* text);
 
 	void OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags);
+
+
+	void displaySectionCentered(int posStart, int posEnd, bool isDownwards = true);
 
 	LRESULT OnNotify(int idCtrl, LPNMHDR pnmh);
 
