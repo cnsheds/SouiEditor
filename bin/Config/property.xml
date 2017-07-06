@@ -155,7 +155,7 @@
 		<margin style="proptext" name ="边距(margin)" />
 		<float style="propoption" name ="float" options="是:1|否:0" description="窗口位置固定不动的标志"/>
 
-		<layout style="propoption" name ="布局形式" options="线性水平:hbox|线性垂直:vbox|Grid布局:gridLayout" description="布局形式"/>		
+		<layout style="propoption" name ="布局形式" options="Grid布局:gridLayout|线性水平:hbox|线性垂直:vbox" description="布局形式"/>		
 
 		<gravity style="propoption" name ="gravity" options="左:left|上:top|中:center|右:right|下:bottom" description="子控件的对齐方式"/>	
 
@@ -262,6 +262,7 @@
 				<cache/>
 				<alpha/>
 				<tip/>
+				<layout/>
 				<columnCount/>
 				<rowCount/>
 				<xInterval/>
@@ -275,7 +276,6 @@
 				<clipClient style="proptext" name ="clipClient" />
 				<focusable/>
 				<drawFocusRect/>
-
 
 				<colorBkgnd/>						
 				<colorBorder/>
