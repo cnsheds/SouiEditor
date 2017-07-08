@@ -32,6 +32,9 @@
     <Filter Include="Dialog">
       <UniqueIdentifier>{b67dd78f-ea6b-4e56-b42a-0f53eb8bc17d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ExtendCtrl\image3d">
+      <UniqueIdentifier>{468c0f03-8900-463c-b5ff-50579f13c8d3}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="license.txt" />
@@ -172,6 +175,27 @@
     </ClCompile>
     <ClCompile Include="pugixml_write.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\OpenSource\soui\controls.extend\SMcListViewEx\SHeaderCtrlEx.cpp">
+      <Filter>ExtendCtrl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\OpenSource\soui\controls.extend\SListCtrlEx.cpp">
+      <Filter>ExtendCtrl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\OpenSource\soui\controls.extend\SRatingBar.cpp">
+      <Filter>ExtendCtrl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\OpenSource\soui\controls.extend\STurn3DView.cpp">
+      <Filter>ExtendCtrl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\OpenSource\soui\controls.extend\image3d\3dlib.cpp">
+      <Filter>ExtendCtrl\image3d</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\OpenSource\soui\controls.extend\image3d\3dmatrix.cpp">
+      <Filter>ExtendCtrl\image3d</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\OpenSource\soui\controls.extend\image3d\3dtransform.cpp">
+      <Filter>ExtendCtrl\image3d</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -356,6 +380,33 @@
     </ClInclude>
     <ClInclude Include="pugixml_write.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\OpenSource\soui\controls.extend\SMcListViewEx\SHeaderCtrlEx.h">
+      <Filter>ExtendCtrl</Filter>
+    </ClInclude>
+    <ClInclude Include="DragDownMgr.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\OpenSource\soui\controls.extend\SListCtrlEx.h">
+      <Filter>ExtendCtrl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\OpenSource\soui\controls.extend\SRatingBar.h">
+      <Filter>ExtendCtrl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\OpenSource\soui\controls.extend\STurn3DView.h">
+      <Filter>ExtendCtrl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\OpenSource\soui\controls.extend\image3d\3dlib.h">
+      <Filter>ExtendCtrl\image3d</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\OpenSource\soui\controls.extend\image3d\3dmatrix.h">
+      <Filter>ExtendCtrl\image3d</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\OpenSource\soui\controls.extend\image3d\3dTransform.h">
+      <Filter>ExtendCtrl\image3d</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\OpenSource\soui\controls.extend\image3d\PerspectiveTransform.h">
+      <Filter>ExtendCtrl\image3d</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
