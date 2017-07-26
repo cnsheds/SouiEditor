@@ -196,11 +196,13 @@
     <ClCompile Include="..\..\..\OpenSource\soui\controls.extend\SIPAddressCtrl.cpp" />
     <ClCompile Include="..\..\..\OpenSource\soui\controls.extend\SListCtrlEx.cpp" />
     <ClCompile Include="..\..\..\OpenSource\soui\controls.extend\SMcListViewEx\SHeaderCtrlEx.cpp" />
+    <ClCompile Include="..\..\..\OpenSource\soui\controls.extend\SRadioBox2.cpp" />
     <ClCompile Include="..\..\..\OpenSource\soui\controls.extend\SRatingBar.cpp" />
     <ClCompile Include="..\..\..\OpenSource\soui\controls.extend\SScrollText.cpp" />
     <ClCompile Include="..\..\..\OpenSource\soui\controls.extend\SSkinMutiFrameImg.cpp" />
     <ClCompile Include="..\..\..\OpenSource\soui\controls.extend\STabCtrl2.cpp" />
     <ClCompile Include="..\..\..\OpenSource\soui\controls.extend\STurn3DView.cpp" />
+    <ClCompile Include="Adapter.cpp" />
     <ClCompile Include="colorpicker\ColourPopup.cpp" />
     <ClCompile Include="colorpicker\SColorPicker.cpp" />
     <ClCompile Include="DesignerView.cpp" />
@@ -260,6 +262,7 @@
     <ClInclude Include="..\..\..\OpenSource\soui\controls.extend\SIPAddressCtrl.h" />
     <ClInclude Include="..\..\..\OpenSource\soui\controls.extend\SListCtrlEx.h" />
     <ClInclude Include="..\..\..\OpenSource\soui\controls.extend\SMcListViewEx\SHeaderCtrlEx.h" />
+    <ClInclude Include="..\..\..\OpenSource\soui\controls.extend\SRadioBox2.h" />
     <ClInclude Include="..\..\..\OpenSource\soui\controls.extend\SRatingBar.h" />
     <ClInclude Include="..\..\..\OpenSource\soui\controls.extend\SScrollText.h" />
     <ClInclude Include="..\..\..\OpenSource\soui\controls.extend\SSkinMutiFrameImg.h" />

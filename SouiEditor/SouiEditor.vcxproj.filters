@@ -197,6 +197,12 @@
     <ClCompile Include="..\..\..\OpenSource\soui\controls.extend\image3d\3dtransform.cpp">
       <Filter>ExtendCtrl\image3d</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\OpenSource\soui\controls.extend\SRadioBox2.cpp">
+      <Filter>ExtendCtrl</Filter>
+    </ClCompile>
+    <ClCompile Include="Adapter.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="SouiEditor.rc">
@@ -407,6 +413,9 @@
     </ClInclude>
     <ClInclude Include="..\..\..\OpenSource\soui\controls.extend\image3d\PerspectiveTransform.h">
       <Filter>ExtendCtrl\image3d</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\OpenSource\soui\controls.extend\SRadioBox2.h">
+      <Filter>ExtendCtrl</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
