@@ -58,7 +58,7 @@ SDesignerView::SDesignerView(SHostDialog *pMainHost, SWindow *pContainer, STreeC
 	pugi::xml_parse_result result = doc.load_file(g_CurDir + _T("Config\\Ctrl.xml"));
 	if (!result)
 	{
-		Debug(_T("加载Ctrl.xml失败"));
+		Debug(_T("加载Ctrl.xml失败\n请将编辑器源码下的Config目录拷贝到执行文件所在目录."));
 		return;
 	}
 

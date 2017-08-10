@@ -25,6 +25,8 @@ SStringW CBaseMcAdapterFix::GetColumnName(int iCol) const {
 
 	if (iCol < m_colNames.GetCount())
 		return m_colNames[iCol];
+	else
+		return L"";
 }
 
 void CBaseMcAdapterFix::IniColNames(pugi::xml_node xmlTemplate)

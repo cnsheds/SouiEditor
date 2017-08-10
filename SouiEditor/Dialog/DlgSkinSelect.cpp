@@ -176,7 +176,7 @@ namespace SOUI
 		pugi::xml_parse_result resutl = m_xmlDocSysSkin.load_file(g_CurDir + L"Config\\theme_sys_res\\sys_xml_skin.xml");
 		if (!resutl)
 		{
-			SMessageBox(NULL, _T("加载SysSkin.xml文件失败"), _T("加载SysSkin.xml文件失败"), MB_OK);
+			SMessageBox(NULL, _T("加载SysSkin.xml文件失败\n请将编辑器源码下的Config目录拷贝到执行文件所在目录."), _T("失败"), MB_OK);
 			return;
 		}
 	}
@@ -427,7 +427,7 @@ namespace SOUI
 		pugi::xml_parse_result resutl = m_xmlDocSkinProperty.load_file(g_CurDir + L"Config\\SkinProperty.xml");
 		if (!resutl)
 		{
-			SMessageBox(NULL, _T("加载SkinProperty.xml文件失败"), _T("加载SkinProperty.xml文件失败"), MB_OK);
+			SMessageBox(NULL, _T("加载SkinProperty.xml文件失败\n请将编辑器源码下的Config目录拷贝到执行文件所在目录."), _T("失败"), MB_OK);
 			return;
 		}
 	}
